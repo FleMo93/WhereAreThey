@@ -27,7 +27,6 @@ public class MeshBox
                 CanMoveDownLeft = false;
                 CanMoveLeft = false;
                 CanMoveUpLeft = false;
-                Free = false;
             }
         }
     }

@@ -125,7 +125,10 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
                             continue;
                         }
 
-                        SetMoveDirections(item, z, x);
+                        if (item.StaticFree)
+                        {
+                            SetMoveDirections(item, z, x);
+                        }
                     }
                 }
             }
@@ -155,7 +158,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
             }
         }
 
-        if(x + 1 < mesh.GetLength(1))
+        if (x + 1 < mesh.GetLength(1))
         {
             Ray ray = new Ray(meshBox.Position, Vector3.right);
 
@@ -165,7 +168,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
             }
         }
 
-        if(x + 1 < mesh.GetLength(1) && z - 1 > 0)
+        if (x + 1 < mesh.GetLength(1) && z - 1 > 0)
         {
             Ray ray = new Ray(meshBox.Position, Vector3.right + Vector3.back);
 
@@ -175,7 +178,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
             }
         }
 
-        if(z - 1 > 0)
+        if (z - 1 > 0)
         {
             Ray ray = new Ray(meshBox.Position, Vector3.back);
 
@@ -185,7 +188,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
             }
         }
 
-        if(x - 1 > 0 && z - 1 > 0)
+        if (x - 1 > 0 && z - 1 > 0)
         {
             Ray ray = new Ray(meshBox.Position, Vector3.back + Vector3.left);
 
@@ -195,7 +198,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
             }
         }
 
-        if(x - 1 > 0)
+        if (x - 1 > 0)
         {
             Ray ray = new Ray(meshBox.Position, Vector3.left);
 
@@ -205,7 +208,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
             }
         }
 
-        if(x - 1 > 0 && z + 1 < mesh.GetLength(0))
+        if (x - 1 > 0 && z + 1 < mesh.GetLength(0))
         {
             Ray ray = new Ray(meshBox.Position, Vector3.forward + Vector3.left);
 
@@ -298,7 +301,8 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
                             Gizmos.color = _FreeColor;
                         }
 
-                        Gizmos.DrawSphere(new Vector3(item.Position.x, _MeshYPosition, item.Position.z), _PlayerRadius / 2);
+                        Gizmos.DrawCube(new Vector3(item.Position.x, _MeshYPosition, item.Position.z), 
+                            new Vector3(_PlayerRadius / 2, _PlayerRadius / 2, _PlayerRadius / 2));
                     }
 
                     if (_DrawPossibleMoveDirections)

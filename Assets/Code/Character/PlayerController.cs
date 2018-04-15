@@ -7,16 +7,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, IPlayerController
 {
     IPlayerMotor playerMotor;
-    IPathfindingMesh pathFindingMesh;
 
 	void Start ()
     {
         playerMotor = GetComponent<IPlayerMotor>();
-        pathFindingMesh = FindObjectOfType<PathfindingMesh>();
-        foreach (Collider collider in GetComponents<Collider>())
-        {
-            pathFindingMesh.RegistrateMoveableObstacle(collider);
-        }
 	}
 	
 
