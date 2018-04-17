@@ -134,7 +134,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
             }
         }
     }
-	
+
     private void SetMoveDirections(MeshBox meshBox, int z, int x)
     {
         if(z + 1 < mesh.GetLength(0))
@@ -276,13 +276,18 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
 
     void OnDrawGizmos()
     {
+        GizmoMesh();
+    }
+
+    void GizmoMesh()
+    {
         if (_DrawMesh && mesh != null && mesh.Length != 0 &&
             (_DrawPossibleMoveDirections || _DrawState))
         {
 
-            for(int z = 0; z < mesh.GetLength(0); z++)
+            for (int z = 0; z < mesh.GetLength(0); z++)
             {
-                for(int x = 0; x < mesh.GetLength(1); x++)
+                for (int x = 0; x < mesh.GetLength(1); x++)
                 {
                     MeshBox item = mesh[z, x];
 
@@ -301,7 +306,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
                             Gizmos.color = _FreeColor;
                         }
 
-                        Gizmos.DrawCube(new Vector3(item.Position.x, _MeshYPosition, item.Position.z), 
+                        Gizmos.DrawCube(new Vector3(item.Position.x, _MeshYPosition, item.Position.z),
                             new Vector3(_PlayerRadius / 2, _PlayerRadius / 2, _PlayerRadius / 2));
                     }
 
@@ -316,7 +321,7 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
                             Gizmos.DrawLine(item.Position, target);
                         }
 
-                        if(item.CanMoveUpRight)
+                        if (item.CanMoveUpRight)
                         {
                             Vector3 target = item.Position;
                             target.x += boxLength;
@@ -324,13 +329,13 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
                             Gizmos.DrawLine(item.Position, target);
                         }
 
-                        if(item.CanMoveRight)
+                        if (item.CanMoveRight)
                         {
                             Vector3 target = item.Position;
                             target.x += boxLength;
                             Gizmos.DrawLine(item.Position, target);
                         }
-                        
+
                         if (item.CanMoveDownRight)
                         {
                             Vector3 target = item.Position;
