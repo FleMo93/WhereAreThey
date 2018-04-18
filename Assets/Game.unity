@@ -166,7 +166,7 @@ MonoBehaviour:
   _BlockedColor: {r: 1, g: 0, b: 0, a: 1}
   _BlockedStaticColor: {r: 0, g: 0, b: 1, a: 1}
   _DirectionDrawing:
-    _ShowUpDirection: 0
+    _ShowUpDirection: 1
     _ShowUpRightDirection: 0
     _ShowRightDirection: 0
     _ShowDownRightDirection: 0
