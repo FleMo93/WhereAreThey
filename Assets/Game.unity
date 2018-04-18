@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -161,15 +161,15 @@ MonoBehaviour:
   _AddToRaycast: 0.1
   _DrawMesh: 1
   _DrawState: 1
-  _DrawPossibleMoveDirections: 1
+  _DrawPossibleMoveDirections: 0
   _FreeColor: {r: 0, g: 1, b: 0, a: 1}
   _BlockedColor: {r: 1, g: 0, b: 0, a: 1}
   _BlockedStaticColor: {r: 0, g: 0, b: 1, a: 1}
   _DirectionDrawing:
     _ShowUpDirection: 1
-    _ShowUpRightDirection: 0
-    _ShowRightDirection: 0
-    _ShowDownRightDirection: 0
+    _ShowUpRightDirection: 1
+    _ShowRightDirection: 1
+    _ShowDownRightDirection: 1
     _ShowDownDirection: 0
     _ShowDownLeftDirection: 0
     _ShowLeftDirection: 0
@@ -733,6 +733,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ba7d9a5bd23a540bb4ec2ef2489c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _MinTimeToNextPoint: 0
+  _MaxTimeToNextPoint: 120
 --- !u!114 &1255964470
 MonoBehaviour:
   m_ObjectHideFlags: 0

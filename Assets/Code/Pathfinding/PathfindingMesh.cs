@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -382,5 +383,15 @@ public class PathfindingMesh : MonoBehaviour, IPathfindingMesh
     public List<Vector3> GetPath()
     {
         return null;
+    }
+
+    public List<Vector3> GetPath(Vector3 start, Vector3 target)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Vector3 GetRandomPoint()
+    {
+        throw new NotImplementedException();
     }
 }

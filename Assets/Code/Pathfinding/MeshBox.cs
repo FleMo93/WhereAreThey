@@ -50,6 +50,28 @@ public class MeshBox
     public MeshBox LeftNeighbor { get; set; }
     public MeshBox UpLeftNeighbor { get; set; }
 
+    public MeshBox[] ReturnNeighbors
+    {
+        get
+        {
+            MeshBox[] neighbors = new MeshBox[8];
+            neighbors[0] = UpNeighbor;
+            neighbors[1] = UpRightNeighbor;
+            neighbors[2] = RightNeighbor;
+            neighbors[3] = DownRightNeighbor;
+            neighbors[4] = DownLeftNeighbor;
+            neighbors[5] = DownNeighbor;
+            neighbors[6] = DownLeftNeighbor;
+            neighbors[7] = LeftNeighbor;
+            neighbors[8] = UpLeftNeighbor;
+
+            return neighbors;
+        }
+    }
+
+    public int MeshX { get; set; }
+    public int MeshZ { get; set; }
+
     public MeshBox(Vector3 position)
     {
         Position = position;

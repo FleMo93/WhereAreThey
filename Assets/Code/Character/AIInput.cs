@@ -2,15 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIInput : MonoBehaviour {
+[RequireComponent(typeof(IPathfindingMesh))]
+public class AIInput : MonoBehaviour
+{
+    [SerializeField]
+    private float _MinTimeToNextPoint = 0f;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
+    [SerializeField]
+    private float _MaxTimeToNextPoint = 120f;
+
+    private IPathfindingMesh pathFindingMesh;
+    private List<Vector3> waypoints;
+    private float _TimeToNextWaypointRequest = 0f;
+    private Vector3 target;
+
+    void Start()
+    {
+        pathFindingMesh = FindObjectOfType<PathfindingShiftedMesh>();
+    }
+
 	void Update () {
-		
+		if(_TimeToNextWaypointRequest > 0)
+        {
+            _TimeToNextWaypointRequest -= Time.deltaTime;
+        }
+
+        if(_TimeToNextWaypointRequest <= 0 && waypoints == null)
+        {
+            target = pathFindingMesh.GetRandomPoint();
+        }
+
+        waypoints = pathFindingMesh.GetPath(this.transform.position, target);
 	}
 }

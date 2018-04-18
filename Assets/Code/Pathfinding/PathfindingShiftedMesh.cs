@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PathfindingShiftedMesh : MonoBehaviour
+public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
 {
     [System.Serializable]
     private class DirectionDrawing
@@ -61,9 +62,12 @@ public class PathfindingShiftedMesh : MonoBehaviour
     private DirectionDrawing _DirectionDrawing;
 
     private List<MeshBox> mesh;
+    private MeshBox[,] mesh2d;
     private List<Collider> moveableObstacles;
     private float diagonalLength;
     private float straigthLength;
+    private float costDiagonal = 1f;
+    private float costStraight = 1f;
 
     void Start()
     {
@@ -120,70 +124,25 @@ public class PathfindingShiftedMesh : MonoBehaviour
         float playerDiameter = _PlayerRadius * 2;
         float posX = minX + playerDiameter;
         float posZ = minZ;
+        int counterZ = 0;
+        int counterX = 1;
 
         mesh = new List<MeshBox>();
-        MeshBox[,] mesh2d = new MeshBox[
+        mesh2d = new MeshBox[
             Mathf.RoundToInt(((maxZ - minZ) / playerDiameter)),
             Mathf.RoundToInt(((maxX - minX) / playerDiameter))
             ];
 
         #region create points
-        int counterZ = 0;
-        int counterX = 1;
-
-        int mesh2dZ = mesh2d.GetLength(0);
-        int mesh2dX = mesh2d.GetLength(1);
-
-        Debug.Log(mesh2dZ);
         for (int z = 0; posZ < maxZ; z++)
         {
             for (int x = 0; posX < maxX; x++)
             {
                 MeshBox box = new MeshBox(new Vector3(posX, _MeshYPosition, posZ));
+                box.MeshX = counterX;
+                box.MeshZ = counterZ;
                 mesh.Add(box);
                 mesh2d[counterZ, counterX] = box;
-
-                #region set neighbors
-                if (counterZ + 2 < mesh2dZ)
-                {
-                    box.UpNeighbor = mesh2d[counterZ + 2, counterX];
-                }
-
-                if(counterZ + 1 < mesh2dX && counterX + 1 < mesh2dX)
-                {
-                    box.UpRightNeighbor = mesh2d[counterZ + 1, counterX + 1];
-                }
-
-                if(counterX + 2 < mesh2dX)
-                {
-                    box.RightNeighbor = mesh2d[counterZ, counterX + 2];
-                }
-
-                if(counterX + 1 < mesh2dX && counterZ - 1 >= 0)
-                {
-                    box.DownRightNeighbor = mesh2d[counterZ - 1, counterX + 1];
-                }
-
-                if(counterZ - 2 >= 0)
-                {
-                    box.DownNeighbor = mesh2d[counterZ - 2, counterX];
-                }
-
-                if(counterZ - 1 >= 0 && counterX - 1 >= 0)
-                {
-                    box.DownLeftNeighbor = mesh2d[counterZ - 1, counterX - 1];
-                }
-
-                if(counterX - 2 >= 0)
-                {
-                    box.LeftNeighbor = mesh2d[counterZ, counterX - 2];
-                }
-
-                if(counterX + 1 < mesh2dX && counterZ - 1 >= 0)
-                {
-                    box.UpLeftNeighbor = mesh2d[counterZ - 1, counterX + 1];
-                }
-                #endregion
 
                 posX += playerDiameter * 2;
                 counterX += 2;
@@ -204,9 +163,72 @@ public class PathfindingShiftedMesh : MonoBehaviour
         }
         #endregion
 
+
+        int mesh2dZ = mesh2d.GetLength(0);
+        int mesh2dX = mesh2d.GetLength(1);
+
+
+        #region setNeighbor
+        for (int z = 0; z < mesh2dZ; z++)
+        {
+            for (int x = 0; x < mesh2dX; x++)
+            {
+                MeshBox box = mesh2d[z, x];
+
+                if(box == null)
+                {
+                    continue;
+                }
+
+                if (z + 2 < mesh2dZ)
+                {
+                    box.UpNeighbor = mesh2d[z + 2, x];
+                }
+
+                if (z + 1 < mesh2dX && x + 1 < mesh2dX)
+                {
+                    box.UpRightNeighbor = mesh2d[z + 1, x + 1];
+                }
+
+                if (x + 2 < mesh2dX)
+                {
+                    box.RightNeighbor = mesh2d[z, x + 2];
+                }
+
+                if (x + 1 < mesh2dX && z - 1 >= 0)
+                {
+                    box.DownRightNeighbor = mesh2d[z - 1, x + 1];
+                }
+
+                if (z - 2 >= 0)
+                {
+                    box.DownNeighbor = mesh2d[z - 2, x];
+                }
+
+                if (z - 1 >= 0 && x - 1 >= 0)
+                {
+                    box.DownLeftNeighbor = mesh2d[z - 1, x - 1];
+                }
+
+                if (x - 2 >= 0)
+                {
+                    box.LeftNeighbor = mesh2d[z, x - 2];
+                }
+
+                if (x - 1 >= 0 && z + 1 < mesh2dZ)
+                {
+                    box.UpLeftNeighbor = mesh2d[z + 1, x - 1];
+                }
+            }
+        }
+        #endregion
+
         diagonalLength = Mathf.Sqrt(Mathf.Pow(playerDiameter, 2) + Mathf.Pow(playerDiameter, 2));
         straigthLength = playerDiameter * 2;
 
+        costDiagonal = straigthLength / diagonalLength;
+        costStraight = 1;
+            
         #region check mesh vs statics
         foreach (GameObject go in FindObjectsOfType<GameObject>())
         {
@@ -300,7 +322,6 @@ public class PathfindingShiftedMesh : MonoBehaviour
         }
         #endregion
     }
-
 
     public void RegistrateMoveableObstacle(Collider obstacle)
     {
@@ -481,5 +502,63 @@ public class PathfindingShiftedMesh : MonoBehaviour
         Vector3 localPos = bc.transform.InverseTransformPoint(worldPos);
         Vector3 delta = localPos - bc.center + bc.size * 0.5f;
         return Vector3.Max(Vector3.zero, delta) == Vector3.Min(delta, bc.size);
+    }
+
+    public List<Vector3> GetPath(Vector3 start, Vector3 target)
+    {
+        List<Vector3> paths = new List<Vector3>();
+        List<AStarElement> openList = new List<AStarElement>();
+        List<AStarElement> closedList = new List<AStarElement>();
+        MeshBox startBox = FindNextBox(start);
+        MeshBox targetBox = FindNextBox(target);
+        
+        openList.Add(new AStarElement
+        {
+            MeshBox = startBox,
+            PredictedCosts = Heuristic(startBox, targetBox)
+        });
+
+        bool pathFound = false;
+        bool firstPathFound = false;
+        float lastSuccessfullCosts = float.MaxValue;
+
+        while(!pathFound)
+        {
+            AStarElement elem = openList.OrderBy(x => x.PredictedCosts).FirstOrDefault();
+
+        }
+
+        return paths;
+    }
+
+    private MeshBox FindNextBox(Vector3 point)
+    {
+        MeshBox nearestStartBox = null;
+        float minRange = float.MaxValue;
+
+        foreach (MeshBox box in mesh)
+        {
+            float range = Vector3.Distance(box.Position, point);
+            if (range < minRange)
+            {
+                minRange = range;
+                nearestStartBox = box;
+            }
+        }
+
+        return nearestStartBox;
+    }
+
+    private float Heuristic(MeshBox start, MeshBox target)
+    {
+        float dx = Mathf.Abs(start.MeshX - target.MeshX);
+        float dz = Mathf.Abs(start.MeshZ - target.MeshZ);
+
+        return costStraight * (dx + dz) + (costDiagonal - 2 * costStraight) * Mathf.Min(dx, dz);
+    }
+
+    public Vector3 GetRandomPoint()
+    {
+        return mesh[UnityEngine.Random.Range(0, mesh.Count - 1)].Position;
     }
 }
