@@ -6,13 +6,31 @@ using UnityEngine;
 public class PathfindingShiftedMesh : MonoBehaviour
 {
     [System.Serializable]
-    private class test
+    private class DirectionDrawing
     {
         [SerializeField]
-        private bool t1;
+        public bool _ShowUpDirection = true;
 
         [SerializeField]
-        private bool t2;
+        public bool _ShowUpRightDirection = true;
+
+        [SerializeField]
+        public bool _ShowRightDirection = true;
+
+        [SerializeField]
+        public bool _ShowDownRightDirection = true;
+
+        [SerializeField]
+        public bool _ShowDownDirection = true;
+
+        [SerializeField]
+        public bool _ShowDownLeftDirection = true;
+
+        [SerializeField]
+        public bool _ShowLeftDirection = true;
+
+        [SerializeField]
+        public bool _ShowUpLeftDirection = true;
     }
 
     [SerializeField]
@@ -40,7 +58,7 @@ public class PathfindingShiftedMesh : MonoBehaviour
     [SerializeField]
     private Color _BlockedStaticColor = Color.blue;
     [SerializeField]
-    private test _Test;
+    private DirectionDrawing _DirectionDrawing;
 
     private List<MeshBox> mesh;
     private List<Collider> moveableObstacles;
@@ -99,30 +117,89 @@ public class PathfindingShiftedMesh : MonoBehaviour
         }
         #endregion
 
-        float posX = minX;
-        float posZ = minZ;
         float playerDiameter = _PlayerRadius * 2;
+        float posX = minX + playerDiameter;
+        float posZ = minZ;
 
         mesh = new List<MeshBox>();
+        MeshBox[,] mesh2d = new MeshBox[
+            Mathf.RoundToInt(((maxZ - minZ) / playerDiameter)),
+            Mathf.RoundToInt(((maxX - minX) / playerDiameter))
+            ];
 
         #region create points
+        int counterZ = 0;
+        int counterX = 1;
+
+        int mesh2dZ = mesh2d.GetLength(0);
+        int mesh2dX = mesh2d.GetLength(1);
+
+        Debug.Log(mesh2dZ);
         for (int z = 0; posZ < maxZ; z++)
         {
             for (int x = 0; posX < maxX; x++)
             {
-                mesh.Add(new MeshBox(new Vector3(posX, _MeshYPosition, posZ)));
-                posX += playerDiameter * 2;
-            }
+                MeshBox box = new MeshBox(new Vector3(posX, _MeshYPosition, posZ));
+                mesh.Add(box);
+                mesh2d[counterZ, counterX] = box;
 
+                #region set neighbors
+                if (counterZ + 2 < mesh2dZ)
+                {
+                    box.UpNeighbor = mesh2d[counterZ + 2, counterX];
+                }
+
+                if(counterZ + 1 < mesh2dX && counterX + 1 < mesh2dX)
+                {
+                    box.UpRightNeighbor = mesh2d[counterZ + 1, counterX + 1];
+                }
+
+                if(counterX + 2 < mesh2dX)
+                {
+                    box.RightNeighbor = mesh2d[counterZ, counterX + 2];
+                }
+
+                if(counterX + 1 < mesh2dX && counterZ - 1 >= 0)
+                {
+                    box.DownRightNeighbor = mesh2d[counterZ - 1, counterX + 1];
+                }
+
+                if(counterZ - 2 >= 0)
+                {
+                    box.DownNeighbor = mesh2d[counterZ - 2, counterX];
+                }
+
+                if(counterZ - 1 >= 0 && counterX - 1 >= 0)
+                {
+                    box.DownLeftNeighbor = mesh2d[counterZ - 1, counterX - 1];
+                }
+
+                if(counterX - 2 >= 0)
+                {
+                    box.LeftNeighbor = mesh2d[counterZ, counterX - 2];
+                }
+
+                if(counterX + 1 < mesh2dX && counterZ - 1 >= 0)
+                {
+                    box.UpLeftNeighbor = mesh2d[counterZ - 1, counterX + 1];
+                }
+                #endregion
+
+                posX += playerDiameter * 2;
+                counterX += 2;
+            }
+            counterZ++;
             posZ += playerDiameter;
 
             if (z % 2 == 0)
             {
                 posX = minX;
+                counterX = 0;
             }
             else
             {
                 posX = minX + playerDiameter;
+                counterX = 1;
             }
         }
         #endregion
@@ -174,55 +251,56 @@ public class PathfindingShiftedMesh : MonoBehaviour
             }
 
             Ray ray = new Ray(box.Position, Vector3.forward);
-            if(!Physics.Raycast(ray, straigthLength + _AddToRaycast))
+            if(!Physics.Raycast(ray, straigthLength + _AddToRaycast) && box.UpNeighbor != null && box.UpNeighbor.StaticFree)
             {
                 box.CanMoveUp = true;
             }
 
             ray = new Ray(box.Position, Vector3.forward + Vector3.right);
-            if(!Physics.Raycast(ray, diagonalLength + _AddToRaycast))
+            if(!Physics.Raycast(ray, diagonalLength + _AddToRaycast) && box.UpRightNeighbor != null && box.UpRightNeighbor.StaticFree)
             {
                 box.CanMoveUpRight = true;
             }
 
             ray = new Ray(box.Position, Vector3.right);
-            if(!Physics.Raycast(ray, straigthLength + _AddToRaycast))
+            if(!Physics.Raycast(ray, straigthLength + _AddToRaycast) && box.RightNeighbor != null && box.RightNeighbor.StaticFree)
             {
                 box.CanMoveRight = true;
             }
 
             ray = new Ray(box.Position, Vector3.back + Vector3.right);
-            if(!Physics.Raycast(ray, diagonalLength + _AddToRaycast))
+            if(!Physics.Raycast(ray, diagonalLength + _AddToRaycast) && box.DownRightNeighbor != null && box.DownRightNeighbor.StaticFree)
             {
                 box.CanMoveDownRight = true;
             }
 
             ray = new Ray(box.Position, Vector3.back);
-            if(!Physics.Raycast(ray, straigthLength + _AddToRaycast))
+            if(!Physics.Raycast(ray, straigthLength + _AddToRaycast) && box.DownNeighbor != null && box.DownNeighbor.StaticFree)
             {
                 box.CanMoveDown = true;
             }
 
             ray = new Ray(box.Position, Vector3.back + Vector3.left);
-            if(!Physics.Raycast(ray, diagonalLength + _AddToRaycast))
+            if(!Physics.Raycast(ray, diagonalLength + _AddToRaycast) && box.DownLeftNeighbor != null && box.DownLeftNeighbor.StaticFree)
             {
                 box.CanMoveDownLeft = true;
             }
 
             ray = new Ray(box.Position, Vector3.left);
-            if(!Physics.Raycast(ray, straigthLength + _AddToRaycast))
+            if(!Physics.Raycast(ray, straigthLength + _AddToRaycast) && box.LeftNeighbor != null && box.LeftNeighbor.StaticFree)
             {
                 box.CanMoveLeft = true;
             }
 
             ray = new Ray(box.Position, Vector3.forward + Vector3.left);
-            if(!Physics.Raycast(ray, diagonalLength + _AddToRaycast))
+            if(!Physics.Raycast(ray, diagonalLength + _AddToRaycast) && box.UpLeftNeighbor != null && box.UpLeftNeighbor.StaticFree)
             {
                 box.CanMoveUpLeft = true;
             }
         }
-        #endregion        
+        #endregion
     }
+
 
     public void RegistrateMoveableObstacle(Collider obstacle)
     {
@@ -322,7 +400,7 @@ public class PathfindingShiftedMesh : MonoBehaviour
                         continue;
                     }
 
-                    if(item.CanMoveUp)
+                    if(item.CanMoveUp && _DirectionDrawing._ShowUpDirection)
                     {
                         Vector3 v3 = item.Position;
                         v3.z += straigthLength;
@@ -330,7 +408,7 @@ public class PathfindingShiftedMesh : MonoBehaviour
                         Gizmos.DrawLine(item.Position, v3);
                     }
 
-                    if(item.CanMoveUpRight)
+                    if(item.CanMoveUpRight && _DirectionDrawing._ShowUpRightDirection)
                     {
                         Vector3 v3 = item.Position;
                         v3.z += diagonalOffset;
@@ -338,7 +416,24 @@ public class PathfindingShiftedMesh : MonoBehaviour
                         Gizmos.DrawLine(item.Position, v3);
                     }
 
-                    if(item.CanMoveDown)
+                    if(item.CanMoveRight && _DirectionDrawing._ShowRightDirection)
+                    {
+                        Vector3 v3 = item.Position;
+                        v3.x += straigthLength;
+
+                        Gizmos.DrawLine(item.Position, v3);
+                    }
+
+                    if(item.CanMoveDownRight && _DirectionDrawing._ShowDownRightDirection)
+                    {
+                        Vector3 v3 = item.Position;
+                        v3.x += diagonalOffset;
+                        v3.z -= diagonalOffset;
+
+                        Gizmos.DrawLine(item.Position, v3);
+                    }
+
+                    if(item.CanMoveDown && _DirectionDrawing._ShowDownDirection)
                     {
                         Vector3 v3 = item.Position;
                         v3.z -= straigthLength;
@@ -346,6 +441,31 @@ public class PathfindingShiftedMesh : MonoBehaviour
                         Gizmos.DrawLine(item.Position, v3);
                     }
 
+                    if(item.CanMoveDownLeft && _DirectionDrawing._ShowDownLeftDirection)
+                    {
+                        Vector3 v3 = item.Position;
+                        v3.z -= diagonalOffset;
+                        v3.x -= diagonalOffset;
+
+                        Gizmos.DrawLine(item.Position, v3);
+                    }
+
+                    if(item.CanMoveLeft && _DirectionDrawing._ShowLeftDirection)
+                    {
+                        Vector3 v3 = item.Position;
+                        v3.x -= straigthLength;
+
+                        Gizmos.DrawLine(item.Position, v3);
+                    }
+
+                    if(item.CanMoveUpLeft && _DirectionDrawing._ShowUpLeftDirection)
+                    {
+                        Vector3 v3 = item.Position;
+                        v3.z += diagonalOffset;
+                        v3.x -= diagonalOffset;
+
+                        Gizmos.DrawLine(item.Position, v3);
+                    }
                 }
             }
         }

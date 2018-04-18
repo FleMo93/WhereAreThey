@@ -41,6 +41,15 @@ public class MeshBox
     public bool CanMoveLeft { get; set; }
     public bool CanMoveUpLeft { get; set; }
 
+    public MeshBox UpNeighbor { get; set; }
+    public MeshBox UpRightNeighbor { get; set; }
+    public MeshBox RightNeighbor { get; set; }
+    public MeshBox DownRightNeighbor { get; set; }
+    public MeshBox DownNeighbor { get; set; }
+    public MeshBox DownLeftNeighbor { get; set; }
+    public MeshBox LeftNeighbor { get; set; }
+    public MeshBox UpLeftNeighbor { get; set; }
+
     public MeshBox(Vector3 position)
     {
         Position = position;

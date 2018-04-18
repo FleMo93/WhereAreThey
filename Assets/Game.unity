@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -165,9 +165,15 @@ MonoBehaviour:
   _FreeColor: {r: 0, g: 1, b: 0, a: 1}
   _BlockedColor: {r: 1, g: 0, b: 0, a: 1}
   _BlockedStaticColor: {r: 0, g: 0, b: 1, a: 1}
-  _Test:
-    t1: 0
-    t2: 0
+  _DirectionDrawing:
+    _ShowUpDirection: 0
+    _ShowUpRightDirection: 0
+    _ShowRightDirection: 0
+    _ShowDownRightDirection: 0
+    _ShowDownDirection: 0
+    _ShowDownLeftDirection: 0
+    _ShowLeftDirection: 0
+    _ShowUpLeftDirection: 0
 --- !u!1 &244856553
 GameObject:
   m_ObjectHideFlags: 0
