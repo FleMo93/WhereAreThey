@@ -6,5 +6,5 @@ public class AStarElement
 {
     public MeshBox MeshBox { get; set; }
     public float PredictedCosts { get; set; }
-    public MeshBox LastMeshBox { get; set; }	
+    public AStarElement LastElement { get; set; }	
 }

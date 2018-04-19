@@ -50,7 +50,7 @@ public class MeshBox
     public MeshBox LeftNeighbor { get; set; }
     public MeshBox UpLeftNeighbor { get; set; }
 
-    public MeshBox[] ReturnNeighbors
+    public MeshBox[] Neighbors
     {
         get
         {
@@ -59,11 +59,10 @@ public class MeshBox
             neighbors[1] = UpRightNeighbor;
             neighbors[2] = RightNeighbor;
             neighbors[3] = DownRightNeighbor;
-            neighbors[4] = DownLeftNeighbor;
-            neighbors[5] = DownNeighbor;
-            neighbors[6] = DownLeftNeighbor;
-            neighbors[7] = LeftNeighbor;
-            neighbors[8] = UpLeftNeighbor;
+            neighbors[4] = DownNeighbor;
+            neighbors[5] = DownLeftNeighbor;
+            neighbors[6] = LeftNeighbor;
+            neighbors[7] = UpLeftNeighbor;
 
             return neighbors;
         }

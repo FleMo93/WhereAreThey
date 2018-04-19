@@ -492,11 +492,6 @@ public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
         }
     }
 
-    public List<Vector3> GetPath()
-    {
-        return null;
-    }
-
     static bool IsInsideBounds(Vector3 worldPos, BoxCollider bc)
     {
         Vector3 localPos = bc.transform.InverseTransformPoint(worldPos);
@@ -518,14 +513,56 @@ public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
             PredictedCosts = Heuristic(startBox, targetBox)
         });
 
-        bool pathFound = false;
-        bool firstPathFound = false;
-        float lastSuccessfullCosts = float.MaxValue;
-
-        while(!pathFound)
+        AStarElement targetElement = null;
+        while(targetElement == null)
         {
             AStarElement elem = openList.OrderBy(x => x.PredictedCosts).FirstOrDefault();
+            closedList.Add(elem);
+            openList.Remove(elem);
 
+            foreach (MeshBox box in elem.MeshBox.Neighbors)
+            {
+                if(!box.StaticFree)
+                {
+                    continue;
+                }
+
+                if(closedList.Select(s => s.MeshBox).Contains(box) || openList.Select(s => s.MeshBox).Contains(box))
+                {
+                    continue;
+                }
+
+                if(box == targetBox)
+                {
+                    targetElement = new AStarElement
+                    {
+                        LastElement = elem,
+                        MeshBox = box
+                    };
+                }
+
+                openList.Add(new AStarElement
+                {
+                    MeshBox = box,
+                    PredictedCosts = Heuristic(box, targetBox),
+                    LastElement = elem
+                });
+            }
+        }
+
+        bool startBoxReached = false;
+        AStarElement nexElement = targetElement;
+        while(!startBoxReached)
+        {
+            paths.Add(nexElement.MeshBox.Position);
+
+            if(nexElement.MeshBox == startBox)
+            {
+                startBoxReached = true;
+                break;
+            }
+
+            nexElement = nexElement.LastElement;
         }
 
         return paths;
@@ -538,6 +575,11 @@ public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
 
         foreach (MeshBox box in mesh)
         {
+            if(!box.StaticFree)
+            {
+                continue;
+            }
+
             float range = Vector3.Distance(box.Position, point);
             if (range < minRange)
             {
