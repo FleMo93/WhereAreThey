@@ -1,16 +1,20 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathVisualizer : MonoBehaviour
+public class PathVisualizer : MonoBehaviour, IPathVisualizer
 {
+    [SerializeField]
+    private bool Visualize = true;
     [SerializeField]
     private GameObject _Start;
     [SerializeField]
     private GameObject _Target;
 
-    List<Vector3> paths;
+    private List<Vector3> paths;
     IPathfindingMesh pathfindingMesh;
+
 
     private void Start()
     {
@@ -19,13 +23,15 @@ public class PathVisualizer : MonoBehaviour
 
     private void Update()
     {
-        paths = pathfindingMesh.GetPath(_Start.transform.position, _Target.transform.position);
-        Debug.Log(paths.Count); 
+        if (_Start != null && _Target != null)
+        {
+            paths = pathfindingMesh.GetPath(_Start.transform.position, _Target.transform.position);
+        }
     }
 
     void OnDrawGizmos()
     {
-        if(paths != null && paths.Count == 0)
+        if(paths == null || paths.Count == 0)
         {
             return;
         }
@@ -36,5 +42,15 @@ public class PathVisualizer : MonoBehaviour
             Gizmos.DrawLine(lastPoint, paths[i]);
             lastPoint = paths[i];
         }
+    }
+
+    public void SetPaths(List<Vector3> paths)
+    {
+        this.paths = paths;
+    }
+
+    public void ShowPath(bool show)
+    {
+        Visualize = show;
     }
 }

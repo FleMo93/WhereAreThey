@@ -565,7 +565,15 @@ public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
             nexElement = nexElement.LastElement;
         }
 
-        return paths;
+
+        List<Vector3> reversedList = new List<Vector3>();
+
+        for(int i = paths.Count - 1; i >= 0; i--)
+        {
+            reversedList.Add(paths[i]);
+        }
+
+        return reversedList;
     }
 
     private MeshBox FindNextBox(Vector3 point)
@@ -601,6 +609,19 @@ public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
 
     public Vector3 GetRandomPoint()
     {
-        return mesh[UnityEngine.Random.Range(0, mesh.Count - 1)].Position;
+        Vector3 point = Vector3.zero;
+        bool pointFound = false;
+
+        while(!pointFound)
+        {
+            MeshBox box = mesh[UnityEngine.Random.Range(0, mesh.Count - 1)];
+
+            if(box.StaticFree)
+            {
+                pointFound = true;
+                point = box.Position;
+            }
+        }
+        return point;
     }
 }

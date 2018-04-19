@@ -18,5 +18,10 @@ public class PlayerInput : MonoBehaviour
         float x = Input.GetAxisRaw("Horizontal");
 
         playerController.Move(new Vector3(x, 0, z).normalized);
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            playerController.Cast();
+        }
 	}
 }
