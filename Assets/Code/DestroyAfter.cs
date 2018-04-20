@@ -9,6 +9,11 @@ public class DestroyAfter : MonoBehaviour
 
     void Update()
     {
+        if(_DestroyAfter < 0)
+        {
+            return;
+        }
+
         _DestroyAfter -= Time.deltaTime;
 
         if(_DestroyAfter <= 0)

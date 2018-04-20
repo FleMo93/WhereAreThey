@@ -79,7 +79,7 @@ public class Magic : MonoBehaviour, IMagic
 
                 foreach (GameObject go in playersInRange)
                 {
-                    go.SetActive(false);
+                    go.GetComponent<IPlayer>().Die();
                 }
             }
         }

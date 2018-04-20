@@ -5,6 +5,21 @@ using UnityEngine;
 
 public class CircleSpawner : MonoBehaviour, ICircleSpawner
 {
+    private static ICircleSpawner circleSpawner;
+    public static ICircleSpawner Get
+    {
+        get
+        {
+            if(circleSpawner == null)
+            {
+                circleSpawner = FindObjectOfType<CircleSpawner>();
+            }
+
+            return circleSpawner;
+        }
+    }
+
+
     [SerializeField]
     private float _MinSpawnTime = 20f;
     [SerializeField]
@@ -24,6 +39,11 @@ public class CircleSpawner : MonoBehaviour, ICircleSpawner
 
 	void Update ()
     {
+        if(GameLogic.Get.GetState() != GameLogicEnum.GameStates.Fight)
+        {
+            return;
+        }
+
         timeToSpawn -= Time.deltaTime;
 
         if(timeToSpawn <= 0)

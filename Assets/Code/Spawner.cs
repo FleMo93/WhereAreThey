@@ -51,9 +51,6 @@ public class Spawner : MonoBehaviour, ISpawner
             go.GetComponent<IPlayerInput>().SetDevice(playerInputDevices.ToArray()[i]);
         }
 
-        foreach(GameObject go in GameObject.FindGameObjectsWithTag(Tags.Circle))
-        {
-            circleSpawner.RegisterCirle(go.GetComponent<ParticleSystem>());
-        }
+        GameLogic.Get.PlayersSpawned();
     }
 }

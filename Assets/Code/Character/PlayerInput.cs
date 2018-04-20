@@ -4,14 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[RequireComponent(typeof(IPlayer))]
 [RequireComponent(typeof(IPlayerController))]
 public class PlayerInput : MonoBehaviour, IPlayerInput
 {
+    IPlayer myPlayer;
     IPlayerController playerController;
     InputDevice inputDevice;
 
     void Start ()
     {
+        myPlayer = GetComponent<IPlayer>();
         playerController = GetComponent<IPlayerController>();
 	}
 
@@ -22,7 +25,7 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
 	
 	void Update ()
     {
-        if(inputDevice == null)
+        if(inputDevice == null || !myPlayer.IsAlive())
         {
             return;
         }

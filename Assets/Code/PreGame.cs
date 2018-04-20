@@ -21,7 +21,6 @@ public class PreGame : MonoBehaviour
     {
         spawner = GetComponent<ISpawner>();
         devices = new List<InputDevice>();
-        _PressStartText.gameObject.SetActive(false);
         _TextPlayers.text = "";
         InputManager.OnDeviceDetached += InputManager_OnDeviceDetached;
 	}
@@ -53,7 +52,7 @@ public class PreGame : MonoBehaviour
 
                     if(devices.Count > 1)
                     {
-                        _PressStartText.gameObject.SetActive(true);
+                        _PressStartText.text = "Press start";
                     }
                 }
             }
