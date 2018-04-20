@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114728727411038646}
   - component: {fileID: 54469171594832412}
   - component: {fileID: 114118327465117306}
+  - component: {fileID: 114064232527907774}
   m_Layer: 8
   m_Name: Human
   m_TagString: Player
@@ -207,6 +208,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _PlayerSettings: {fileID: 11400000, guid: 020d6b441bb8c7049897099eb93efd3d, type: 2}
+--- !u!114 &114064232527907774
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1036626565749764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a7740e877a15c64194b407a62368fbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnOnDeath: {fileID: 1789363575678670, guid: 068d912bc3b7b884d8f38373344bf7b4,
+    type: 2}
 --- !u!114 &114118327465117306
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -221,6 +235,7 @@ MonoBehaviour:
   _Cooldown: 2
   _CastDiameter: 3
   _MagicRangeCollider: {fileID: 136618049383064782}
+  _KillDelay: 0.5
 --- !u!114 &114728727411038646
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -11,6 +11,8 @@ public class Magic : MonoBehaviour, IMagic
     private float _CastDiameter = 3f;
     [SerializeField]
     private CapsuleCollider _MagicRangeCollider;
+    [SerializeField]
+    private float _KillDelay = 0.5f; 
 
     private ParticleSystem particle;
     private float cooldownLeft = 0f;
@@ -45,19 +47,40 @@ public class Magic : MonoBehaviour, IMagic
                 readyToCast = true;
             }
         }
+
+        Kill();
     }
 
 
+    private float killDelayLeft;
+    private bool killed = true;
     public void Cast()
     {
         if (readyToCast)
         {
             particle.Play();
             readyToCast = false;
+            killDelayLeft = _KillDelay;
+            killed = false;
+        }
 
-            foreach(GameObject go in playersInRange)
+        
+    }
+
+    void Kill()
+    {
+        if (!killed)
+        {
+            killDelayLeft -= Time.deltaTime;
+
+            if (killDelayLeft <= 0)
             {
-                go.SetActive(false);
+                killed = true;
+
+                foreach (GameObject go in playersInRange)
+                {
+                    go.SetActive(false);
+                }
             }
         }
     }
@@ -68,9 +91,7 @@ public class Magic : MonoBehaviour, IMagic
         if(collider.gameObject.tag == Tags.Player)
         {
             playersInRange.Add(collider.gameObject);
-            Debug.Log(playersInRange.Count);
         }
-
     }
 
     void OnTriggerExit(Collider collider)
