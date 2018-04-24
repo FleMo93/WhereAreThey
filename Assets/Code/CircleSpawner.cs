@@ -5,27 +5,13 @@ using UnityEngine;
 
 public class CircleSpawner : MonoBehaviour, ICircleSpawner
 {
-    private static ICircleSpawner circleSpawner;
-    public static ICircleSpawner Get
-    {
-        get
-        {
-            if(circleSpawner == null)
-            {
-                circleSpawner = FindObjectOfType<CircleSpawner>();
-            }
-
-            return circleSpawner;
-        }
-    }
-
-
     [SerializeField]
     private float _MinSpawnTime = 20f;
     [SerializeField]
     private float _MaxSpawnTime = 30f;
 
-    List<ParticleSystem> circles;
+    private List<ParticleSystem> circles;
+    private IGameLogic gameLogic;
 
     private float timeToSpawn;
 
@@ -33,13 +19,14 @@ public class CircleSpawner : MonoBehaviour, ICircleSpawner
     {
         circles = new List<ParticleSystem>();
         timeToSpawn = UnityEngine.Random.Range(_MinSpawnTime, _MaxSpawnTime);
+        gameLogic = GameObject.Find("ScriptHolder").GetComponent<IGameLogic>();
 	}
 	
     
 
 	void Update ()
     {
-        if(GameLogic.Get.GetState() != GameLogicEnum.GameStates.Fight)
+        if(gameLogic.GetState() != GameLogicEnum.GameStates.Fight)
         {
             return;
         }

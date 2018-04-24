@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 54469171594832412}
   - component: {fileID: 114118327465117306}
   - component: {fileID: 114351655534789882}
+  - component: {fileID: 114170422764026074}
   m_Layer: 8
   m_Name: Human
   m_TagString: Player
@@ -442,6 +443,17 @@ MonoBehaviour:
   _CastDiameter: 3
   _MagicRangeCollider: {fileID: 136618049383064782}
   _KillDelay: 0.4
+--- !u!114 &114170422764026074
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1036626565749764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4641542c5572bbf42927f36c2af0abc6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114351655534789882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -13870,10 +13882,10 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -134533170
+  randomSeed: 847380830
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -14316,15 +14328,15 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 5
     enabled: 1
-    type: 0
+    type: 10
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
-    radiusThickness: 0
-    donutRadius: 0.2
+    radiusThickness: 1
+    donutRadius: 0.01
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 0, y: 0, z: 0}
+    m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -14338,7 +14350,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.01
+      value: 0.15
       mode: 0
       spread: 0
       speed:

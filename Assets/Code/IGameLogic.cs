@@ -4,11 +4,10 @@ using UnityEngine;
 
 public interface IGameLogic
 {
-    void PlayersSpawned();
     GameLogicEnum.GameStates GetState();
 }
 
 public static class GameLogicEnum
 {
-    public enum GameStates { WaitForSpawn, Fight, End }
+    public enum GameStates { Menue, ChangeLevel, Fight, End }
 }

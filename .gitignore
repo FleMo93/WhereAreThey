@@ -4,6 +4,8 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
+/Assets/Models/[Bb]lend/**/*.meta
+/Assets/Models/[Bb]lend/**/*.blend1
 
 # Visual Studio 2015 cache directory
 /.vs/
@@ -32,3 +34,5 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+/Assets/ProCore*
+#Unity3D packages

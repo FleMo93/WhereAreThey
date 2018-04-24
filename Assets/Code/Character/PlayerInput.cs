@@ -10,27 +10,34 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
 {
     IPlayer myPlayer;
     IPlayerController playerController;
+    IGameLogic gameLogic;
     InputDevice inputDevice;
 
     void Start ()
     {
         myPlayer = GetComponent<IPlayer>();
         playerController = GetComponent<IPlayerController>();
+        gameLogic = GameObject.Find("ScriptHolder").GetComponent<IGameLogic>();
 	}
 
     public void SetDevice(InputDevice device)
     {
         inputDevice = device;
     }
-	
-	void Update ()
+
+    public InputDevice GetDevice()
+    {
+        return inputDevice;
+    }
+
+    void Update ()
     {
         if(inputDevice == null || !myPlayer.IsAlive())
         {
             return;
         }
 
-        if(inputDevice.Action1)
+        if(inputDevice.Action1 && gameLogic.GetState() == GameLogicEnum.GameStates.Fight)
         {
             playerController.Cast();
         }

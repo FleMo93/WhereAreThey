@@ -7,29 +7,25 @@ using UnityEngine.UI;
 public class PreGame : MonoBehaviour
 {
     [SerializeField]
-    Text _PressStartText;
-    [SerializeField]
-    GameObject _StartUI;
-    [SerializeField]
-    Text _TextPlayers;
+    GameObject[] _Players;
+
 
     ISpawner spawner;
-    List<InputDevice> devices;
+    List<InputDevice> registerDevices;
     bool started = false;
 
 	void Start ()
     {
         spawner = GetComponent<ISpawner>();
-        devices = new List<InputDevice>();
-        _TextPlayers.text = "";
-        InputManager.OnDeviceDetached += InputManager_OnDeviceDetached;
-	}
+        registerDevices = new List<InputDevice>();
+        
+    }
 
     private void InputManager_OnDeviceDetached(InputDevice obj)
     {
-        if(devices.Contains(obj))
+        if(registerDevices.Contains(obj))
         {
-            devices.Remove(obj);
+            registerDevices.Remove(obj);
         }
     }
 
@@ -39,30 +35,36 @@ public class PreGame : MonoBehaviour
         {
             return;
         }
-        
-        foreach(var device in InputManager.Devices)
-        {
-            if(device.AnyButton)
-            {
-                if(!devices.Contains(device))
-                {
-                    devices.Add(device);
 
-                    _TextPlayers.text = devices.Count + " Players";
 
-                    if(devices.Count > 1)
-                    {
-                        _PressStartText.text = "Press start";
-                    }
-                }
-            }
-        }
+		//if(InputManager.ActiveDevice.CommandIsPressed && registerDevices.Count > 1 && !started)
+  //      {
+  //          started = true;
+  //          spawner.SpawnPlayersAndAI(registerDevices);
+  //      }
 
-		if(InputManager.ActiveDevice.CommandIsPressed && devices.Count > 1 && !started)
-        {
-            started = true;
-            spawner.SpawnPlayersAndAI(devices);
-            _StartUI.SetActive(false);
-        }
+  //      var device = InputManager.ActiveDevice;
+  //      var x = InputManager.Devices;
+
+  //      if (device == null)
+  //      {
+  //          return;
+  //      }
+
+  //      //Tarou hat hier eine fehlerhafte Zeile vor dem Coder entdeckt :)
+  //      if (device.AnyButton)
+  //      {
+  //          if (!registerDevices.Contains(device))
+  //          {
+  //              registerDevices.Add(device);
+
+  //              _TextPlayers.text = registerDevices.Count + " Players";
+
+  //              if (registerDevices.Count > 1)
+  //              {
+  //                  _PressStartText.text = "Press 'start' to begin";
+  //              }
+  //          }
+  //      }
     }
 }

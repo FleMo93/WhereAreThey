@@ -6,4 +6,5 @@ using UnityEngine;
 public interface IPlayerInput
 {
     void SetDevice(InputDevice device);
+    InputDevice GetDevice();
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Circle : MonoBehaviour {
-	void Awake ()
+	void Start()
     {
-        CircleSpawner.Get.RegisterCirle(GetComponent<ParticleSystem>());
+        GameObject.Find("ScriptHolder").GetComponent<ICircleSpawner>().RegisterCirle(GetComponent<ParticleSystem>());
 	}
 	
 }
