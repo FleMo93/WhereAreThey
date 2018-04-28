@@ -5,5 +5,5 @@ using UnityEngine;
 
 public interface ISpawner
 {
-    void SpawnPlayersAndAI(ICollection<InputDevice> playerInputDevices);	
+    void SpawnAI(ICollection<InputDevice> playerInputDevices);	
 }

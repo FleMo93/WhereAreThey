@@ -188,7 +188,6 @@ GameObject:
   - component: {fileID: 152756891}
   - component: {fileID: 152756892}
   - component: {fileID: 152756894}
-  - component: {fileID: 152756895}
   m_Layer: 0
   m_Name: ScriptHolder
   m_TagString: Untagged
@@ -307,17 +306,17 @@ MonoBehaviour:
   - {fileID: 1290937946}
   - {fileID: 217674780}
   _TimeToRestart: 5
---- !u!114 &152756895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 152756887}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4641542c5572bbf42927f36c2af0abc6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  keyboardControlls:
+  - Up: 119
+    Right: 100
+    Left: 97
+    Down: 115
+    Cast: 306
+  - Up: 264
+    Right: 262
+    Left: 260
+    Down: 261
+    Cast: 256
 --- !u!1001 &217674779
 Prefab:
   m_ObjectHideFlags: 0
@@ -1351,7 +1350,7 @@ MonoBehaviour:
   logDebugInfo: 0
   invertYAxis: 0
   useFixedUpdate: 0
-  dontDestroyOnLoad: 1
+  dontDestroyOnLoad: 0
   suspendInBackground: 0
   enableICade: 0
   enableXInput: 0

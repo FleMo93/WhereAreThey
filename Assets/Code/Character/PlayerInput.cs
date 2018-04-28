@@ -11,7 +11,7 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
     IPlayer myPlayer;
     IPlayerController playerController;
     IGameLogic gameLogic;
-    InputDevice inputDevice;
+    ICharacterControlls characterInput;
 
     void Start ()
     {
@@ -20,53 +20,28 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
         gameLogic = GameObject.Find("ScriptHolder").GetComponent<IGameLogic>();
 	}
 
-    public void SetDevice(InputDevice device)
+    public void SetControlls(ICharacterControlls device)
     {
-        inputDevice = device;
+        characterInput = device;
     }
 
-    public InputDevice GetDevice()
+    public ICharacterControlls GetControlls()
     {
-        return inputDevice;
+        return characterInput;
     }
 
     void Update ()
     {
-        if(inputDevice == null || !myPlayer.IsAlive())
+        if(characterInput == null || !myPlayer.IsAlive())
         {
             return;
         }
 
-        if(inputDevice.Action1 && gameLogic.GetState() == GameLogicEnum.GameStates.Fight)
+        if(characterInput.IsCasting() && gameLogic.GetState() == GameLogicEnum.GameStates.Fight)
         {
             playerController.Cast();
         }
 
-        Vector3 v3 = new Vector3(
-            inputDevice.LeftStick.Value.x,
-            0,
-            inputDevice.LeftStick.Value.y);
-
-        if(inputDevice.DPadUp.IsPressed)
-        {
-            v3.z = +1;
-        }
-
-        if(inputDevice.DPadRight.IsPressed)
-        {
-            v3.x = +1;
-        }
-
-        if(inputDevice.DPadDown.IsPressed)
-        {
-            v3.z = -1;
-        }
-
-        if(inputDevice.DPadLeft.IsPressed)
-        {
-            v3.x = -1;
-        }
-
-        playerController.Move(v3);
+        playerController.Move(characterInput.MoveDirection());
 	}
 }

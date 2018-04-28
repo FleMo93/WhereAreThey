@@ -99,7 +99,6 @@ public class Magic : MonoBehaviour, IMagic
         if(collider.gameObject.tag == Tags.Player)
         {
             playersInRange.Remove(collider.gameObject);
-            Debug.Log(playersInRange.Count);
         }
 
     }

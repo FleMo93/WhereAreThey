@@ -11,6 +11,8 @@ public class GameLogic : MonoBehaviour, IGameLogic
     private GameObject[] _Players;
     [SerializeField]
     private float _TimeToRestart = 5f;
+    [SerializeField]
+    private KeyboardControlls[] keyboardControlls;
 
 
     private GameObject[] players;
@@ -23,8 +25,6 @@ public class GameLogic : MonoBehaviour, IGameLogic
         {
             player.SetActive(false);
         }
-
-        InputManager.OnDeviceDetached += InputManager_OnDeviceDetached;
     }
 
     void Update ()
@@ -46,7 +46,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
                 {
                     IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
 
-                    if (playerInput.GetDevice() == device)
+                    if (playerInput.GetControlls() != null && playerInput.GetControlls().GetDevice() == device)
                     {
                         deviceInUse = true;
                         break;
@@ -63,9 +63,12 @@ public class GameLogic : MonoBehaviour, IGameLogic
                 {
                     IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
 
-                    if(playerInput.GetDevice() == null)
+                    if(playerInput.GetControlls() == null)
                     {
-                        playerInput.SetDevice(device);
+                        ICharacterControlls cc = new CharacterControlls();
+                        cc.SetController(device);
+
+                        playerInput.SetControlls(cc);
 
                         if(state == GameLogicEnum.GameStates.Menue)
                         {
@@ -77,18 +80,48 @@ public class GameLogic : MonoBehaviour, IGameLogic
                 }
             }
         }
-    }
 
-    private void InputManager_OnDeviceDetached(InputDevice device)
-    {
-        foreach(GameObject player in _Players)
+
+        foreach(KeyboardControlls kc in keyboardControlls)
         {
-            IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
-
-            if(playerInput.GetDevice() == device)
+            if(Input.GetKeyDown(kc.Cast))
             {
-                playerInput.SetDevice(null);
-                player.SetActive(false);
+                bool deviceInUse = false;
+
+                foreach(GameObject player in _Players)
+                {
+                    IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
+
+                    if(playerInput.GetControlls() != null && playerInput.GetControlls().GetKeyboardControlls() == kc)
+                    {
+                        deviceInUse = true;
+                        break;
+                    }
+                }
+
+                if(deviceInUse)
+                {
+                    continue;
+                }
+
+                foreach(GameObject player in _Players)
+                {
+                    IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
+                    if(playerInput.GetControlls() == null)
+                    {
+                        ICharacterControlls cc = new CharacterControlls();
+                        cc.SetMouseKeyboard(kc);
+
+                        playerInput.SetControlls(cc);
+
+                        if(state == GameLogicEnum.GameStates.Menue)
+                        {
+                            player.SetActive(true);
+                        }
+
+                        break;
+                    }
+                }
             }
         }
     }

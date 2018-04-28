@@ -5,6 +5,6 @@ using UnityEngine;
 
 public interface IPlayerInput
 {
-    void SetDevice(InputDevice device);
-    InputDevice GetDevice();
+    void SetControlls(ICharacterControlls device);
+    ICharacterControlls GetControlls();
 }

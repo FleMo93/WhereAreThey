@@ -31,7 +31,7 @@ public class Spawner : MonoBehaviour, ISpawner
         gameLogic = GameObject.Find("ScriptHolder").GetComponent<IGameLogic>();
 	}
 
-    public void SpawnPlayersAndAI(ICollection<InputDevice> playerInputDevices)
+    public void SpawnAI(ICollection<InputDevice> playerInputDevices)
     {
         for (int i = 0; i < _AICount; i++)
         {
