@@ -11,5 +11,4 @@ public interface ICharacterControlls
     void SetMouseKeyboard(KeyboardControlls keyboardControlls);
     bool IsCasting();
     Vector3 MoveDirection();
-    
 }

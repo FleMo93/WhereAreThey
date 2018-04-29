@@ -26,7 +26,7 @@ public class CircleSpawner : MonoBehaviour, ICircleSpawner
 
 	void Update ()
     {
-        if(gameLogic.GetState() != GameLogicEnum.GameStates.Fight)
+        if(gameLogic.GetState() != GameLogicStatics.GameStates.Fight)
         {
             return;
         }

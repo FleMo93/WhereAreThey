@@ -37,7 +37,7 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
             return;
         }
 
-        if(characterInput.IsCasting() && gameLogic.GetState() == GameLogicEnum.GameStates.Fight)
+        if(characterInput.IsCasting() && gameLogic.GetState() == GameLogicStatics.GameStates.Fight)
         {
             playerController.Cast();
         }

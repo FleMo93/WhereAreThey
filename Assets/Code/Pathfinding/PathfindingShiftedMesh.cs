@@ -229,10 +229,10 @@ public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
         costDiagonal = straigthLength / diagonalLength;
         costStraight = 1;
             
-        #region check mesh vs statics
+        #region check mesh vs level
         foreach (GameObject go in FindObjectsOfType<GameObject>())
         {
-            if (!go.isStatic)
+            if (go.layer != Layers.AntiPathMesh)
             {
                 continue;
             }

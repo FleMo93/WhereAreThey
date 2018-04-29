@@ -14,16 +14,21 @@ public class GameLogic : MonoBehaviour, IGameLogic
     [SerializeField]
     private KeyboardControlls[] keyboardControlls;
 
+    public event GameLogicStatics.GameStateChangedHandler GameStateChanged;
 
     private GameObject[] players;
+    private List<IPlayerInput> playerInputs;
 
-    private GameLogicEnum.GameStates state = GameLogicEnum.GameStates.Menue;
+    private GameLogicStatics.GameStates state = GameLogicStatics.GameStates.WaitForPlayers;
+
 
     void Start()
     {
+        playerInputs = new List<IPlayerInput>();
+
         foreach(GameObject player in _Players)
         {
-            player.SetActive(false);
+            playerInputs.Add(player.GetComponent<IPlayerInput>());
         }
     }
 
@@ -42,10 +47,8 @@ public class GameLogic : MonoBehaviour, IGameLogic
                 bool deviceInUse = false;
 
                 //check if device is already in use
-                foreach (GameObject player in _Players)
+                foreach (IPlayerInput playerInput in playerInputs)
                 {
-                    IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
-
                     if (playerInput.GetControlls() != null && playerInput.GetControlls().GetDevice() == device)
                     {
                         deviceInUse = true;
@@ -57,6 +60,8 @@ public class GameLogic : MonoBehaviour, IGameLogic
                 {
                     continue;
                 }
+
+                int playersReady = 0;
 
                 //set device for player if free
                 foreach(GameObject player in _Players)
@@ -70,12 +75,22 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
                         playerInput.SetControlls(cc);
 
-                        if(state == GameLogicEnum.GameStates.Menue)
+                        if(state == GameLogicStatics.GameStates.WaitForPlayers)
                         {
                             player.SetActive(true);
                         }
-                        
-                        break;
+
+                        playersReady++;
+
+                        if (playersReady >= 2 && state == GameLogicStatics.GameStates.WaitForPlayers)
+                        {
+                            state = GameLogicStatics.GameStates.ReadyToStart;
+
+                            if(GameStateChanged != null)
+                            {
+                                GameStateChanged(this, state);
+                            }
+                        }
                     }
                 }
             }
@@ -114,7 +129,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
                         playerInput.SetControlls(cc);
 
-                        if(state == GameLogicEnum.GameStates.Menue)
+                        if(state == GameLogicStatics.GameStates.WaitForPlayers)
                         {
                             player.SetActive(true);
                         }
@@ -128,7 +143,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
     void CheckPlayerStats()
     {
-        if (state == GameLogicEnum.GameStates.Fight)
+        if (state == GameLogicStatics.GameStates.Fight)
         {
             int playersAlive = 0;
 
@@ -142,11 +157,16 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
             if (playersAlive <= 1)
             {
-                state = GameLogicEnum.GameStates.End;
+                state = GameLogicStatics.GameStates.End;
+
+                if (GameStateChanged != null)
+                {
+                    GameStateChanged(this, state);
+                }
             }
         }
 
-        if (state == GameLogicEnum.GameStates.End)
+        if (state == GameLogicStatics.GameStates.End)
         {
             _TimeToRestart -= Time.deltaTime;
 
@@ -158,8 +178,25 @@ public class GameLogic : MonoBehaviour, IGameLogic
         }
     }
 
-    public GameLogicEnum.GameStates GetState()
+    public GameLogicStatics.GameStates GetState()
     {
         return state;
+    }
+
+    public void StartGame()
+    {
+        state = GameLogicStatics.GameStates.ChangeLevel;
+
+        if (GameStateChanged != null)
+        {
+            GameStateChanged(this, state);
+        }
+
+        Debug.Log("Start");
+    }
+
+    public void ExitGame()
+    {
+        Environment.Exit(0);
     }
 }
