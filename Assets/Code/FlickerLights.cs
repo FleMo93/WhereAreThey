@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlickerLights : MonoBehaviour
+public class FlickerLights : MonoBehaviour, IFlickerLights
 {
     [SerializeField]
     private Light[] _Lights;
@@ -35,7 +35,6 @@ public class FlickerLights : MonoBehaviour
         timeToSwitchState = Random.Range(_MinTimeLightState, _MaxTimeLightState);
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
 		if(!_Flicker)
@@ -56,6 +55,7 @@ public class FlickerLights : MonoBehaviour
         if(timeToSwitchState <= 0)
         {
             SetLights(!state);
+            state = !state;
             timeToSwitchState = Random.Range(_MinTimeLightState, _MaxTimeLightState);
         }
 	}

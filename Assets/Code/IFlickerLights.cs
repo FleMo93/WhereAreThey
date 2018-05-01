@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IHumanColor
+public interface IFlickerLights
 {
-    Color GetColor();
-    void MixColors();
+    void SetState(bool state);
 }

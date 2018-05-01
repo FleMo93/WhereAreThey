@@ -5,5 +5,6 @@ using UnityEngine;
 
 public interface ISpawner
 {
-    void SpawnAI(ICollection<InputDevice> playerInputDevices);	
+    void SpawnAI(ICollection<InputDevice> playerInputDevices);
+    void AwakePlayer(GameObject player);
 }

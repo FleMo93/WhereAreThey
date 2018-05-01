@@ -5,8 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(ISpawner))]
+[RequireComponent(typeof(ILevelManager))]
 public class GameLogic : MonoBehaviour, IGameLogic
 {
+    [SerializeField, ReadOnly]
+    private GameLogicStatics.GameStates _State = GameLogicStatics.GameStates.ChangeLevel;
     [SerializeField]
     private GameObject[] _Players;
     [SerializeField]
@@ -14,22 +18,31 @@ public class GameLogic : MonoBehaviour, IGameLogic
     [SerializeField]
     private KeyboardControlls[] keyboardControlls;
 
+
     public event GameLogicStatics.GameStateChangedHandler GameStateChanged;
 
-    private GameObject[] players;
     private List<IPlayerInput> playerInputs;
-
-    private GameLogicStatics.GameStates state = GameLogicStatics.GameStates.WaitForPlayers;
-
+    private ISpawner spawner;
+    private ILevelManager levelManager;
 
     void Start()
     {
         playerInputs = new List<IPlayerInput>();
+        spawner = GetComponent<ISpawner>();
+        levelManager = GetComponent<ILevelManager>();
 
         foreach(GameObject player in _Players)
         {
             playerInputs.Add(player.GetComponent<IPlayerInput>());
         }
+
+        levelManager.MenueLoaded += (sender) =>
+        {
+            _State = GameLogicStatics.GameStates.WaitForPlayers;
+            FireGameStateChangedEvent();
+        };
+
+        levelManager.LoadMenue();
     }
 
     void Update ()
@@ -61,8 +74,6 @@ public class GameLogic : MonoBehaviour, IGameLogic
                     continue;
                 }
 
-                int playersReady = 0;
-
                 //set device for player if free
                 foreach(GameObject player in _Players)
                 {
@@ -75,21 +86,9 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
                         playerInput.SetControlls(cc);
 
-                        if(state == GameLogicStatics.GameStates.WaitForPlayers)
+                        if(_State == GameLogicStatics.GameStates.WaitForPlayers)
                         {
-                            player.SetActive(true);
-                        }
-
-                        playersReady++;
-
-                        if (playersReady >= 2 && state == GameLogicStatics.GameStates.WaitForPlayers)
-                        {
-                            state = GameLogicStatics.GameStates.ReadyToStart;
-
-                            if(GameStateChanged != null)
-                            {
-                                GameStateChanged(this, state);
-                            }
+                            spawner.AwakePlayer(player);
                         }
                     }
                 }
@@ -119,7 +118,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
                     continue;
                 }
 
-                foreach(GameObject player in _Players)
+                foreach (GameObject player in _Players)
                 {
                     IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
                     if(playerInput.GetControlls() == null)
@@ -129,9 +128,9 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
                         playerInput.SetControlls(cc);
 
-                        if(state == GameLogicStatics.GameStates.WaitForPlayers)
+                        if(_State == GameLogicStatics.GameStates.WaitForPlayers)
                         {
-                            player.SetActive(true);
+                            spawner.AwakePlayer(player);
                         }
 
                         break;
@@ -143,11 +142,30 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
     void CheckPlayerStats()
     {
-        if (state == GameLogicStatics.GameStates.Fight)
+        if(_State == GameLogicStatics.GameStates.WaitForPlayers)
+        {
+            int playersReady = 0;
+
+            foreach (GameObject player in _Players)
+            {
+                if(player.activeSelf)
+                {
+                    playersReady++;
+                }
+            }
+
+            if (playersReady >= 2 && _State == GameLogicStatics.GameStates.WaitForPlayers)
+            {
+                _State = GameLogicStatics.GameStates.ReadyToStart;
+                FireGameStateChangedEvent();
+            }
+        }
+
+        if (_State == GameLogicStatics.GameStates.Fight)
         {
             int playersAlive = 0;
 
-            foreach (GameObject player in players)
+            foreach (GameObject player in _Players)
             {
                 if (player.activeSelf)
                 {
@@ -157,16 +175,12 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
             if (playersAlive <= 1)
             {
-                state = GameLogicStatics.GameStates.End;
-
-                if (GameStateChanged != null)
-                {
-                    GameStateChanged(this, state);
-                }
+                _State = GameLogicStatics.GameStates.End;
+                FireGameStateChangedEvent();
             }
         }
 
-        if (state == GameLogicStatics.GameStates.End)
+        if (_State == GameLogicStatics.GameStates.End)
         {
             _TimeToRestart -= Time.deltaTime;
 
@@ -180,23 +194,28 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
     public GameLogicStatics.GameStates GetState()
     {
-        return state;
+        return _State;
     }
 
     public void StartGame()
     {
-        state = GameLogicStatics.GameStates.ChangeLevel;
-
-        if (GameStateChanged != null)
-        {
-            GameStateChanged(this, state);
-        }
-
-        Debug.Log("Start");
+        _State = GameLogicStatics.GameStates.ChangeLevel;
+        FireGameStateChangedEvent();
     }
 
     public void ExitGame()
     {
-        Environment.Exit(0);
+        if (Application.isPlaying && !Application.isEditor)
+        {
+            Environment.Exit(0);
+        }
+    }
+
+    private void FireGameStateChangedEvent()
+    {
+        if(GameStateChanged != null)
+        {
+            GameStateChanged(this, _State);
+        }
     }
 }

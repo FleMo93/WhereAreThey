@@ -6,6 +6,7 @@ public interface IGameLogic
 {
     GameLogicStatics.GameStates GetState();
     void StartGame();
+    void ExitGame();
     event GameLogicStatics.GameStateChangedHandler GameStateChanged;
 }
 
