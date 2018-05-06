@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 8
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -39,6 +39,7 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
   m_IndirectSpecularColor: {r: 0.44926882, g: 0.49934024, b: 0.575711, a: 1}
+  m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -54,11 +55,10 @@ LightmapSettings:
     m_EnableBakedLightmaps: 1
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
-    serializedVersion: 9
+    serializedVersion: 10
     m_Resolution: 2
     m_BakeResolution: 40
-    m_TextureWidth: 1024
-    m_TextureHeight: 1024
+    m_AtlasSize: 1024
     m_AO: 0
     m_AOMaxDistance: 1
     m_CompAOExponent: 1
@@ -455,9 +455,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19c11833be7df914c80cdde40e30ce51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LevelElements:
-  - Group: 0
-    GameObject: {fileID: 1115850500}
+  _LevelElements:
+  - Group: 2
+    GameObject: {fileID: 2051073352}
+  - Group: 2
+    GameObject: {fileID: 518217715}
   - Group: 1
     GameObject: {fileID: 1604249759}
   - Group: 1
@@ -466,10 +468,10 @@ MonoBehaviour:
     GameObject: {fileID: 1226622280}
   - Group: 1
     GameObject: {fileID: 1797917300}
-  - Group: 2
-    GameObject: {fileID: 2051073352}
-  - Group: 2
-    GameObject: {fileID: 518217715}
+  - Group: 0
+    GameObject: {fileID: 1115850500}
+  _OffsetStart: 0.5
+  _AnimatorController: {fileID: 9100000, guid: 90216057c9de3b64b95182ae98d025f5, type: 2}
 --- !u!1 &518217715 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1002011738610546, guid: 0b1ea99d96943a5419597af0cffd5868,
@@ -730,7 +732,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4725224160043718, guid: 0b1ea99d96943a5419597af0cffd5868, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4725224160043718, guid: 0b1ea99d96943a5419597af0cffd5868, type: 2}
       propertyPath: m_LocalPosition.z
@@ -758,7 +760,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1663304503451992, guid: 0b1ea99d96943a5419597af0cffd5868, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0b1ea99d96943a5419597af0cffd5868, type: 2}

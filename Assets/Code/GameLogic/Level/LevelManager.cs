@@ -17,6 +17,9 @@ public class LevelManager : MonoBehaviour, ILevelManager
     public event LevelManagerStatics.LevelChangedHandler LevelChanged;
     public event LevelManagerStatics.StartLevelChangingHandler StartLevelChanging;
 
+    private ILevelChange _actualLevel;
+    private ILevelChange _nextLevel;
+
     void Start()
     {
 
@@ -30,7 +33,8 @@ public class LevelManager : MonoBehaviour, ILevelManager
 
     public void SwitchToNextLevel()
     {
-
+        _actualLevel = _nextLevel;
+        _nextLevel = null;
     }
 
     public void LoadMenue()
@@ -42,9 +46,13 @@ public class LevelManager : MonoBehaviour, ILevelManager
 
         _MenueLevel.SetActive(true);
 
-        if(MenueLoaded != null)
-        {
-            MenueLoaded(this);
-        }
+        _nextLevel = _MenueLevel.GetComponent<ILevelChange>();
+        _nextLevel.AnimateToLevel();
+        
+
+        //if(MenueLoaded != null)
+        //{
+        //    MenueLoaded(this);
+        //}
     }
 }
