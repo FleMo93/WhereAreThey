@@ -22,9 +22,15 @@ public class LevelManager : MonoBehaviour, ILevelManager
 
     void Start()
     {
-
     }
 
+    private void _nextLevel_LevelAnimated(object sender)
+    {
+        if(MenueLoaded != null)
+        {
+            MenueLoaded(this);
+        }
+    }
 
     public void LoadNextLevel()
     {
@@ -44,15 +50,17 @@ public class LevelManager : MonoBehaviour, ILevelManager
             StartMenueLoading(this);
         }
 
+        _MenueLevel.transform.position = new Vector3(0, 100, 0);
         _MenueLevel.SetActive(true);
+
+        if(_nextLevel != null)
+        {
+            _nextLevel.LevelAnimated -= _nextLevel_LevelAnimated;
+        }
 
         _nextLevel = _MenueLevel.GetComponent<ILevelChange>();
         _nextLevel.AnimateToLevel();
-        
 
-        //if(MenueLoaded != null)
-        //{
-        //    MenueLoaded(this);
-        //}
+        _nextLevel.LevelAnimated += _nextLevel_LevelAnimated;
     }
 }

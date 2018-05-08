@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 public class GameLogic : MonoBehaviour, IGameLogic
 {
     [SerializeField, ReadOnly]
-    private GameLogicStatics.GameStates _State = GameLogicStatics.GameStates.ChangeLevel;
+    private GameLogicStatics.GameStates _State = GameLogicStatics.GameStates.FirstStart;
     [SerializeField]
     private GameObject[] _Players;
     [SerializeField]
@@ -38,8 +38,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
         levelManager.MenueLoaded += (sender) =>
         {
-            _State = GameLogicStatics.GameStates.WaitForPlayers;
-            FireGameStateChangedEvent();
+            ChangeGameState(GameLogicStatics.GameStates.WaitForPlayers);
         };
 
         levelManager.LoadMenue();
@@ -53,6 +52,11 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
     void SetPlayerControlls()
     {
+        if(_State == GameLogicStatics.GameStates.FirstStart)
+        {
+            return;
+        }
+
         foreach (InputDevice device in InputManager.Devices)
         {
             if (device.AnyButtonWasPressed)
@@ -156,8 +160,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
             if (playersReady >= 2 && _State == GameLogicStatics.GameStates.WaitForPlayers)
             {
-                _State = GameLogicStatics.GameStates.ReadyToStart;
-                FireGameStateChangedEvent();
+                ChangeGameState(GameLogicStatics.GameStates.ReadyToStart);
             }
         }
 
@@ -175,8 +178,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
             if (playersAlive <= 1)
             {
-                _State = GameLogicStatics.GameStates.End;
-                FireGameStateChangedEvent();
+                ChangeGameState(GameLogicStatics.GameStates.End);
             }
         }
 
@@ -199,8 +201,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
     public void StartGame()
     {
-        _State = GameLogicStatics.GameStates.ChangeLevel;
-        FireGameStateChangedEvent();
+        ChangeGameState(GameLogicStatics.GameStates.ChangeLevel);
     }
 
     public void ExitGame()
@@ -211,8 +212,10 @@ public class GameLogic : MonoBehaviour, IGameLogic
         }
     }
 
-    private void FireGameStateChangedEvent()
+    private void ChangeGameState(GameLogicStatics.GameStates gameState)
     {
+        _State = gameState;
+
         if(GameStateChanged != null)
         {
             GameStateChanged(this, _State);

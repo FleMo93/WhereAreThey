@@ -12,6 +12,6 @@ public interface IGameLogic
 
 public static class GameLogicStatics
 {
-    public enum GameStates { WaitForPlayers, ReadyToStart, ChangeLevel, Fight, End }
+    public enum GameStates { FirstStart, WaitForPlayers, ReadyToStart, ChangeLevel, Fight, End }
     public delegate void GameStateChangedHandler(object sender, GameStates gameState);
 }

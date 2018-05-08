@@ -6,7 +6,7 @@ using UnityEngine;
 public class LevelElement
 {
     [SerializeField]
-    public int Group = 0;
+    public float TimeToRunOn = 0;
     [SerializeField]
     public GameObject GameObject;
 }

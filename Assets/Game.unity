@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae110dcdb1b29d344afeac159271ae99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _State: 2
+  _State: 0
   _Players:
   - {fileID: 228583179}
   - {fileID: 897954797}
@@ -456,19 +456,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _LevelElements:
-  - Group: 2
+  - TimeToRunOn: 1.4
     GameObject: {fileID: 2051073352}
-  - Group: 2
+  - TimeToRunOn: 1.2
     GameObject: {fileID: 518217715}
-  - Group: 1
+  - TimeToRunOn: 0.8
     GameObject: {fileID: 1604249759}
-  - Group: 1
+  - TimeToRunOn: 0.6
     GameObject: {fileID: 1838773767}
-  - Group: 1
+  - TimeToRunOn: 0.4
     GameObject: {fileID: 1226622280}
-  - Group: 1
+  - TimeToRunOn: 0.2
     GameObject: {fileID: 1797917300}
-  - Group: 0
+  - TimeToRunOn: 0
     GameObject: {fileID: 1115850500}
   _OffsetStart: 0.5
   _AnimatorController: {fileID: 9100000, guid: 90216057c9de3b64b95182ae98d025f5, type: 2}
@@ -732,7 +732,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4725224160043718, guid: 0b1ea99d96943a5419597af0cffd5868, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4725224160043718, guid: 0b1ea99d96943a5419597af0cffd5868, type: 2}
       propertyPath: m_LocalPosition.z
@@ -822,7 +822,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 14.2
+  orthographic size: 17
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

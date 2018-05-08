@@ -4,6 +4,9 @@ using UnityEngine;
 
 public interface ILevelChange
 {
+    event LevelChangeStatics.NavMeshLoaded NavMeshLoaded;
+    event LevelChangeStatics.LevelAnimated LevelAnimated;
+
     void LoadNavMesh();
     void AnimateToLevel();
     void BeginLevel();
@@ -11,6 +14,6 @@ public interface ILevelChange
 
 public static class LevelChangeStatics
 {
-    public delegate void StartLevelChangingHandler(object sender);
-    public delegate void LevelChangedHandler(object sender);
+    public delegate void NavMeshLoaded(object sender);
+    public delegate void LevelAnimated(object sender);
 }
