@@ -33,7 +33,7 @@ public class DoorStart : MonoBehaviour
         else if(gameState == GameLogicStatics.GameStates.WaitForPlayers)
         {
             triggerEnabled = false;
-            flickerLights.SetState(false);
+            flickerLights.SetState(false, true);
 
             foreach(var ps in particleSystems)
             {

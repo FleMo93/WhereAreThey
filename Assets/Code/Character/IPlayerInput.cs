@@ -7,4 +7,5 @@ public interface IPlayerInput
 {
     void SetControlls(ICharacterControlls device);
     ICharacterControlls GetControlls();
+    GameObject GetGameObject();
 }

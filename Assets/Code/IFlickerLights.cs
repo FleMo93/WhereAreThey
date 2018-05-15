@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IFlickerLights
 {
-    void SetState(bool state);
+    void SetState(bool state, bool instant = false);
 }

@@ -299,7 +299,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _MenueLevel: {fileID: 380424086}
-  _LevelsPrefabs: []
+  _LevelsPrefabs:
+  - {fileID: 1760004955721666, guid: a3def6afbcd587c44a1754d4cbd5aee0, type: 2}
 --- !u!114 &152756894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,6 +330,11 @@ MonoBehaviour:
     Left: 260
     Down: 261
     Cast: 256
+  - Up: 105
+    Right: 108
+    Left: 106
+    Down: 107
+    Cast: 32
 --- !u!1001 &217674779
 Prefab:
   m_ObjectHideFlags: 0

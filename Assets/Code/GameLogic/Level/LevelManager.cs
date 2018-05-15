@@ -9,6 +9,8 @@ public class LevelManager : MonoBehaviour, ILevelManager
     GameObject _MenueLevel;
     [SerializeField]
     GameObject[] _LevelsPrefabs;
+    [SerializeField]
+    private float _LoadLevelHeight = 100;
 
 
     public event LevelManagerStatics.StartMenueLoading StartMenueLoading;
@@ -34,7 +36,8 @@ public class LevelManager : MonoBehaviour, ILevelManager
 
     public void LoadNextLevel()
     {
-        
+        GameObject level = Instantiate(_LevelsPrefabs[0]);
+        level.transform.position = new Vector3(0, _LoadLevelHeight, 0);
     }
 
     public void SwitchToNextLevel()
@@ -50,7 +53,7 @@ public class LevelManager : MonoBehaviour, ILevelManager
             StartMenueLoading(this);
         }
 
-        _MenueLevel.transform.position = new Vector3(0, 100, 0);
+        _MenueLevel.transform.position = new Vector3(0, _LoadLevelHeight, 0);
         _MenueLevel.SetActive(true);
 
         if(_nextLevel != null)

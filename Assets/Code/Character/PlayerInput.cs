@@ -44,4 +44,9 @@ public class PlayerInput : MonoBehaviour, IPlayerInput
 
         playerController.Move(characterInput.MoveDirection());
 	}
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
+    }
 }

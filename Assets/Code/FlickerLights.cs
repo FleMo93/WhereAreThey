@@ -68,11 +68,18 @@ public class FlickerLights : MonoBehaviour, IFlickerLights
         }
     }
 
-    public void SetState(bool state)
+    public void SetState(bool state, bool instant = false)
     {
         stateToReach = state;
-        timeToFinish = Random.Range(_MinTimeToFlicker, _MaxTimeToFlicker);
-        timeToSwitchState = Random.Range(_MinTimeLightState, _MaxTimeLightState);
-        _Flicker = true;
+        if (!instant)
+        {
+            timeToFinish = Random.Range(_MinTimeToFlicker, _MaxTimeToFlicker);
+            timeToSwitchState = Random.Range(_MinTimeLightState, _MaxTimeLightState);
+            _Flicker = true;
+        }
+        else
+        {
+            SetLights(state);
+        }
     }
 }

@@ -39,6 +39,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
         levelManager.MenueLoaded += (sender) =>
         {
             ChangeGameState(GameLogicStatics.GameStates.WaitForPlayers);
+            levelManager.LoadNextLevel();
         };
 
         levelManager.LoadMenue();
@@ -79,10 +80,8 @@ public class GameLogic : MonoBehaviour, IGameLogic
                 }
 
                 //set device for player if free
-                foreach(GameObject player in _Players)
+                foreach(IPlayerInput playerInput in playerInputs)
                 {
-                    IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
-
                     if(playerInput.GetControlls() == null)
                     {
                         ICharacterControlls cc = new CharacterControlls();
@@ -92,7 +91,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
                         if(_State == GameLogicStatics.GameStates.WaitForPlayers)
                         {
-                            spawner.AwakePlayer(player);
+                            spawner.AwakePlayer(playerInput.GetGameObject());
                         }
                     }
                 }
@@ -106,10 +105,8 @@ public class GameLogic : MonoBehaviour, IGameLogic
             {
                 bool deviceInUse = false;
 
-                foreach(GameObject player in _Players)
+                foreach(IPlayerInput playerInput in playerInputs)
                 {
-                    IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
-
                     if(playerInput.GetControlls() != null && playerInput.GetControlls().GetKeyboardControlls() == kc)
                     {
                         deviceInUse = true;
@@ -122,9 +119,8 @@ public class GameLogic : MonoBehaviour, IGameLogic
                     continue;
                 }
 
-                foreach (GameObject player in _Players)
+                foreach (IPlayerInput playerInput in playerInputs)
                 {
-                    IPlayerInput playerInput = player.GetComponent<IPlayerInput>();
                     if(playerInput.GetControlls() == null)
                     {
                         ICharacterControlls cc = new CharacterControlls();
@@ -132,9 +128,9 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
                         playerInput.SetControlls(cc);
 
-                        if(_State == GameLogicStatics.GameStates.WaitForPlayers)
+                        if(_State == GameLogicStatics.GameStates.WaitForPlayers || _State == GameLogicStatics.GameStates.ReadyToStart)
                         {
-                            spawner.AwakePlayer(player);
+                            spawner.AwakePlayer(playerInput.GetGameObject());
                         }
 
                         break;
@@ -219,6 +215,25 @@ public class GameLogic : MonoBehaviour, IGameLogic
         if(GameStateChanged != null)
         {
             GameStateChanged(this, _State);
+        }
+    }
+
+    private void DisableActivePlayers()
+    {
+        foreach (GameObject player in _Players)
+        {
+            player.SetActive(false);
+        }
+    }
+
+    private void SpawnActivePlayers()
+    {
+        foreach(IPlayerInput playerInput in playerInputs)
+        {
+           if(playerInput.GetControlls() != null)
+            {
+                spawner.AwakePlayer(playerInput.GetGameObject());
+            }
         }
     }
 }

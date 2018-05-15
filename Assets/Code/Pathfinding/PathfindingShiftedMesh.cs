@@ -59,7 +59,7 @@ public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
     [SerializeField]
     private Color _BlockedStaticColor = Color.blue;
     [SerializeField]
-    private DirectionDrawing _DirectionDrawing;
+    private DirectionDrawing _DirectionDrawing = null;
 
     private List<MeshBox> mesh;
     private MeshBox[,] mesh2d;
@@ -138,7 +138,7 @@ public class PathfindingShiftedMesh : MonoBehaviour, IPathfindingMesh
         {
             for (int x = 0; posX < maxX; x++)
             {
-                MeshBox box = new MeshBox(new Vector3(posX, _MeshYPosition, posZ));
+                MeshBox box = new MeshBox(new Vector3(posX, this.transform.position.y + _MeshYPosition, posZ));
                 box.MeshX = counterX;
                 box.MeshZ = counterZ;
                 mesh.Add(box);
