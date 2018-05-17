@@ -197,7 +197,7 @@ public class GameLogic : MonoBehaviour, IGameLogic
 
     public void StartGame()
     {
-        ChangeGameState(GameLogicStatics.GameStates.ChangeLevel);
+        UnloadLevel();
     }
 
     public void ExitGame()
@@ -235,5 +235,12 @@ public class GameLogic : MonoBehaviour, IGameLogic
                 spawner.AwakePlayer(playerInput.GetGameObject());
             }
         }
+    }
+
+    private void UnloadLevel()
+    {
+        ChangeGameState(GameLogicStatics.GameStates.ChangeLevel);
+        DisableActivePlayers();
+        levelManager.UnloadLevel();
     }
 }

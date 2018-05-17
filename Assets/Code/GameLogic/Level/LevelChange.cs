@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class LevelChange : MonoBehaviour, ILevelChange
 {
+    [SerializeField, ReadOnly]
+    private States state = States.Waiting;
+
     [SerializeField]
     private LevelElement[] _LevelElements;
     [SerializeField]
@@ -13,10 +16,10 @@ public class LevelChange : MonoBehaviour, ILevelChange
     private RuntimeAnimatorController _AnimatorController;
 
     public event LevelChangeStatics.NavMeshLoaded NavMeshLoaded;
-    public event LevelChangeStatics.LevelAnimated LevelAnimated;
+    public event LevelChangeStatics.LevelInAnimated LevelInAnimated;
+    public event LevelChangeStatics.LevelOutAnimated LevelOutAnimated;
 
     private enum States { LoadAnimation, UnloadAnimation, LoadNavMesh, Waiting }
-    private States state = States.Waiting;
     private bool loadAnimationDone = false;
     float loadAnimationTimer = 0;
 
@@ -53,36 +56,104 @@ public class LevelChange : MonoBehaviour, ILevelChange
 
     void Update()
     {
-        if(state == States.LoadAnimation)
+        switch(state)
         {
-            int animationsDone = 0;
+            case States.LoadAnimation:
+                LoadLevelAnimation();
+                break;
 
-            loadAnimationTimer += Time.deltaTime;
-            
-            foreach(LevelElement element in _LevelElements)
+            case States.UnloadAnimation:
+                UnloadLevelAnimation();
+                break;
+        }
+    }
+
+    private void LoadLevelAnimation()
+    {
+        int animationsDone = 0;
+
+        loadAnimationTimer += Time.deltaTime;
+
+        foreach (LevelElement element in _LevelElements)
+        {
+            Animator animator = element.GameObject.GetComponent<Animator>();
+
+            if (loadAnimationTimer >= element.TimeToRunOn &&
+                animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
             {
-                Animator animator = element.GameObject.GetComponent<Animator>();
-
-                if (loadAnimationTimer >= element.TimeToRunOn &&
-                    animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-                {
-                    animator.Play("Load");
-                }
-                else if(animator.GetCurrentAnimatorStateInfo(0).IsName("Load Finish"))
-                {
-                    animationsDone++;
-                }
+                animator.Play("Load");
             }
-
-            if(animationsDone == _LevelElements.Length - 1)
+            else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Load Finished"))
             {
-                state = States.Waiting;
-
-                if(LevelAnimated != null)
-                {
-                    LevelAnimated(this);
-                }
+                animationsDone++;
             }
         }
+
+        if (animationsDone == _LevelElements.Length)
+        {
+            state = States.Waiting;
+
+            foreach (LevelElement element in _LevelElements)
+            {
+                Animator animator = element.GameObject.GetComponent<Animator>();
+                animator.Play("Idle");
+            }
+
+            if (LevelInAnimated != null)
+            {
+                LevelInAnimated(this);
+            }
+        }
+    }
+
+    private void UnloadLevelAnimation()
+    {
+        int animationsDone = 0;
+
+        loadAnimationTimer += Time.deltaTime;
+
+        foreach (LevelElement element in _LevelElements)
+        {
+            Animator animator = element.GameObject.GetComponent<Animator>();
+
+            if (loadAnimationTimer >= element.TimeToRunOn &&
+                animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            {
+                animator.Play("Unload");
+            }
+            else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Unload Finished"))
+            {
+                animationsDone++;
+            }
+        }
+
+        if (animationsDone == _LevelElements.Length)
+        {
+            state = States.Waiting;
+
+            foreach (LevelElement element in _LevelElements)
+            {
+                Animator animator = element.GameObject.GetComponent<Animator>();
+                animator.Play("Idle");
+            }
+
+            if (LevelOutAnimated != null)
+            {
+                LevelOutAnimated(this);
+            }
+        }
+    }
+
+    public void AnimateOutOfLevel()
+    {
+        if(state == States.Waiting)
+        {
+            state = States.UnloadAnimation;
+        }
+    }
+
+    public GameObject GetGameObject()
+    {
+        return gameObject;
     }
 }

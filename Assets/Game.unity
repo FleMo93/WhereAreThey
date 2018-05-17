@@ -301,6 +301,7 @@ MonoBehaviour:
   _MenueLevel: {fileID: 380424086}
   _LevelsPrefabs:
   - {fileID: 1760004955721666, guid: a3def6afbcd587c44a1754d4cbd5aee0, type: 2}
+  _LoadLevelHeight: 100
 --- !u!114 &152756894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,6 +462,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19c11833be7df914c80cdde40e30ce51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 3
   _LevelElements:
   - TimeToRunOn: 1.4
     GameObject: {fileID: 2051073352}
