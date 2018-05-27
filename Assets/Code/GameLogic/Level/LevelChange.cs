@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class LevelChange : MonoBehaviour, ILevelChange
 {
@@ -11,9 +12,11 @@ public class LevelChange : MonoBehaviour, ILevelChange
     [SerializeField]
     private LevelElement[] _LevelElements;
     [SerializeField]
-    private float _OffsetStart = 0.5f;
-    [SerializeField]
     private RuntimeAnimatorController _AnimatorController;
+    [SerializeField]
+    private Vector3 _LevelElementsScaleAtStart = Vector3.zero;
+    [SerializeField]
+    private UnityEvent OnAnimationFinished;
 
     public event LevelChangeStatics.NavMeshLoaded NavMeshLoaded;
     public event LevelChangeStatics.LevelInAnimated LevelInAnimated;
@@ -27,9 +30,11 @@ public class LevelChange : MonoBehaviour, ILevelChange
     {
         foreach (LevelElement le in _LevelElements)
         {
+            le.GameObject.transform.localScale = _LevelElementsScaleAtStart;
             Animator myAnimator = le.GameObject.AddComponent<Animator>();
             myAnimator.runtimeAnimatorController = _AnimatorController;
             myAnimator.applyRootMotion = true;
+
         }
     }
 
@@ -93,11 +98,7 @@ public class LevelChange : MonoBehaviour, ILevelChange
         {
             state = States.Waiting;
 
-            foreach (LevelElement element in _LevelElements)
-            {
-                Animator animator = element.GameObject.GetComponent<Animator>();
-                animator.Play("Idle");
-            }
+            OnAnimationFinished.Invoke();
 
             if (LevelInAnimated != null)
             {

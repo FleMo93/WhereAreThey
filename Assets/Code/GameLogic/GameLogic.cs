@@ -39,7 +39,6 @@ public class GameLogic : MonoBehaviour, IGameLogic
         levelManager.MenueLoaded += (sender) =>
         {
             ChangeGameState(GameLogicStatics.GameStates.WaitForPlayers);
-            levelManager.LoadNextLevel();
         };
 
         levelManager.LoadMenue();
@@ -241,6 +240,6 @@ public class GameLogic : MonoBehaviour, IGameLogic
     {
         ChangeGameState(GameLogicStatics.GameStates.ChangeLevel);
         DisableActivePlayers();
-        levelManager.UnloadLevel();
+        levelManager.LoadNextLevel();
     }
 }
